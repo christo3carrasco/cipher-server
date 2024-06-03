@@ -5,7 +5,11 @@ class Server {
   constructor() {
     this.app = express();
     this.port = process.env.PORT;
-    this.cipherPath = "/api/cipher";
+
+    this.paths = {
+      option: "/api/option",
+      vote: "/api/vote",
+    };
 
     this.middlewares();
     this.routes();
@@ -18,7 +22,8 @@ class Server {
   }
 
   routes() {
-    this.app.use(this.cipherPath, require("../routes/cipher"));
+    this.app.use(this.paths.option, require("../routes/option"));
+    this.app.use(this.paths.vote, require("../routes/vote"));
   }
 
   listen() {
