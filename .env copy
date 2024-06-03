@@ -1,0 +1,2 @@
+PORT=5000
+NETWORK=http://localhost:8545
