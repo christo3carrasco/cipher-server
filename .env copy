@@ -1,3 +1,3 @@
 PORT=5000
 NETWORK=http://localhost:8545
-MONGODB_CNN=mongodb://localhost:27017/cipherchoice
+MONGODB_CNN=mongodb://root:example@localhost:27017/cipherchoice?authSource=admin
