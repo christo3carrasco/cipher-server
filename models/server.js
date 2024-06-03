@@ -10,6 +10,8 @@ class Server {
     this.paths = {
       option: "/api/option",
       vote: "/api/vote",
+      voter: "/api/voter",
+      voting: "/api/voting",
     };
 
     this.conectarDB();
@@ -30,6 +32,8 @@ class Server {
   routes() {
     this.app.use(this.paths.option, require("../routes/option"));
     this.app.use(this.paths.vote, require("../routes/vote"));
+    this.app.use(this.paths.voter, require("../routes/voter"));
+    this.app.use(this.paths.voting, require("../routes/voting"));
   }
 
   listen() {
