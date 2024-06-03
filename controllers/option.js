@@ -5,7 +5,7 @@ const choiceContract = require("../public/assets/ChoiceContract.json");
 const web3 = new Web3(process.env.NETWORK);
 
 //GET
-const cipherGet = async (req = request, res = response) => {
+const optionGet = async (req = request, res = response) => {
   const { address } = req.params;
 
   try {
@@ -30,7 +30,7 @@ const cipherGet = async (req = request, res = response) => {
 };
 
 //POST
-const cipherPost = async (req = request, res = response) => {
+const optionPost = async (req = request, res = response) => {
   const { address } = req.params;
   const { name } = req.body;
 
@@ -50,28 +50,7 @@ const cipherPost = async (req = request, res = response) => {
   }
 };
 
-//PUT
-const cipherPut = async (req = request, res = response) => {
-  const { address, id } = req.params;
-
-  try {
-    const contract = new web3.eth.Contract(choiceContract.abi, address);
-    const addresses = await web3.eth.getAccounts();
-
-    await contract.methods
-      .vote(id)
-      .send({ from: addresses[0], gas: "3000000" });
-    res.status(200).json({ msg: "Vote added successfully" });
-  } catch (error) {
-    res.status(400).json({
-      msg: "No valid address",
-      address,
-    });
-  }
-};
-
 module.exports = {
-  cipherGet,
-  cipherPost,
-  cipherPut,
+  optionGet,
+  optionPost,
 };
