@@ -28,7 +28,23 @@ const voterPost = async (req = request, res = response) => {
 //GET
 const votersGet = async (req = request, res = response) => {
   try {
-    const voters = await Voter.find();
+    const { votingKey, votingProcess, status } = req.query;
+
+    const filters = {};
+
+    if (votingKey) {
+      filters.votingKey = votingKey;
+    }
+
+    if (votingProcess) {
+      filters.votingProcess = votingProcess;
+    }
+
+    if (status) {
+      filters.status = status;
+    }
+
+    const voters = await Voter.find(filters);
 
     if (!voters || voters.length === 0) {
       return res.status(404).json({
