@@ -1,7 +1,7 @@
 const { request, response } = require("express");
 const { Web3 } = require("web3");
 
-const { Vote, Voting } = require("../models");
+const { Vote, Voter, Voting } = require("../models");
 
 const choiceContract = require("../public/assets/ChoiceContract.json");
 const web3 = new Web3(process.env.NETWORK);
@@ -21,6 +21,10 @@ const votePost = async (req = request, res = response) => {
 
     const voting = await Voting.findById(votingId);
     const address = voting.contractAddress;
+
+    const voter = await Voter.findById(voterId);
+    voter.hasVoted = true;
+    voter.save();
 
     const contract = new web3.eth.Contract(choiceContract.abi, address);
     const addresses = await web3.eth.getAccounts();
