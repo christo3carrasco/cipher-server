@@ -9,7 +9,7 @@ const {
   votingDelete,
 } = require("../controllers/voting");
 const { entriesValidator } = require("../middlewares");
-const { votingIdExists } = require("../helpers/db-validator");
+const { votingIdExists, userIdExists } = require("../helpers/db-validator");
 
 const router = Router();
 
@@ -17,12 +17,13 @@ const router = Router();
 router.post(
   "/",
   [
-    check("title", "title is required").not().isEmpty(),
-    check("description", "description is required").not().isEmpty(),
-    check("startDate", "startDate is required").not().isEmpty(),
-    check("endDate", "endDate is required").not().isEmpty(),
-    check("contractAddress", "contractAddress is required").not().isEmpty(),
-    check("password", "password is required").not().isEmpty(),
+    check("title", "title is required").notEmpty(),
+    check("description", "description is required").notEmpty(),
+    check("startDate", "startDate is required").notEmpty(),
+    check("endDate", "endDate is required").notEmpty(),
+    check("contractAddress", "contractAddress is required").isEthereumAddress(),
+    check("organizer", "organizer is required").isMongoId(),
+    check("organizer").custom(userIdExists),
     entriesValidator,
   ],
   votingPost

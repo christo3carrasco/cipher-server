@@ -26,8 +26,9 @@ const VotingSchema = Schema(
       type: String,
       required: true,
     },
-    password: {
-      type: String,
+    organizer: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     status: {
