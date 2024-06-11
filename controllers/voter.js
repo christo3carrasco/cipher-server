@@ -1,14 +1,11 @@
 const { request, response } = require("express");
-const { generateUniqueVotingKey } = require("../helpers/gen-key");
 const { Voter } = require("../models");
 
-//votingKey
 //POST
 const voterPost = async (req = request, res = response) => {
   try {
-    const { votingProcess, ...body } = req.body;
-    const votingKey = await generateUniqueVotingKey(votingProcess);
-    const voter = new Voter({ ...body, votingKey, votingProcess });
+    const { ...body } = req.body;
+    const voter = new Voter({ ...body });
     await voter.save();
 
     res.status(201).json({
@@ -28,12 +25,16 @@ const voterPost = async (req = request, res = response) => {
 //GET
 const votersGet = async (req = request, res = response) => {
   try {
-    const { votingKey, votingProcess, status } = req.query;
+    const { user, hasVoted, votingProcess, status } = req.query;
 
     const filters = {};
 
-    if (votingKey) {
-      filters.votingKey = votingKey;
+    if (user) {
+      filters.user = user;
+    }
+
+    if (hasVoted) {
+      filters.hasVoted = hasVoted;
     }
 
     if (votingProcess) {

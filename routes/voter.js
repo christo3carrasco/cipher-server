@@ -9,7 +9,11 @@ const {
   voterDelete,
 } = require("../controllers/voter");
 const { entriesValidator } = require("../middlewares");
-const { voterIdExists, votingIdExists } = require("../helpers/db-validator");
+const {
+  voterIdExists,
+  votingIdExists,
+  userIdExists,
+} = require("../helpers/db-validator");
 
 const router = Router();
 
@@ -17,8 +21,10 @@ const router = Router();
 router.post(
   "/",
   [
-    check("name", "name is required").not().isEmpty(),
-    check("votingProcess", "votingProcess is required").not().isEmpty(),
+    check("user", "user is required").notEmpty(),
+    check("user", "no valid mongo id").isMongoId(),
+    check("user").custom(userIdExists),
+    check("votingProcess", "votingProcess is required").notEmpty(),
     check("votingProcess", "no valid mongo id").isMongoId(),
     check("votingProcess").custom(votingIdExists),
     entriesValidator,

@@ -2,13 +2,10 @@ const { Schema, model } = require("mongoose");
 
 const VoterSchema = Schema(
   {
-    name: {
-      type: String,
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
-    },
-    votingKey: {
-      type: String,
-      required: false,
     },
     hasVoted: {
       type: Boolean,
