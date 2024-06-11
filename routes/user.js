@@ -8,7 +8,14 @@ const {
   userPut,
   userDelete,
 } = require("../controllers/user");
-const { entriesValidator } = require("../middlewares");
+
+const {
+  entriesValidator,
+  hasValidJwt,
+  hasAdmin,
+  hasRole,
+} = require("../middlewares");
+
 const {
   emailExists,
   roleExists,
@@ -34,12 +41,14 @@ router.post(
 );
 
 //GET
-router.get("/", usersGet);
+router.get("/", [hasValidJwt, hasAdmin], usersGet);
 
 //GET
 router.get(
   "/:id",
   [
+    hasValidJwt,
+    hasRole("ADMIN_ROLE", "USER_ROLE"),
     check("id", "no valid mongo id").isMongoId(),
     check("id").custom(userIdExists),
     entriesValidator,
@@ -51,6 +60,8 @@ router.get(
 router.put(
   "/:id",
   [
+    hasValidJwt,
+    hasRole("ADMIN_ROLE", "USER_ROLE"),
     check("id", "no valid mongo id").isMongoId(),
     check("id").custom(userIdExists),
     entriesValidator,
@@ -62,6 +73,8 @@ router.put(
 router.delete(
   "/:id",
   [
+    hasValidJwt,
+    hasAdmin,
     check("id", "no valid mongo id").isMongoId(),
     check("id").custom(userIdExists),
     entriesValidator,

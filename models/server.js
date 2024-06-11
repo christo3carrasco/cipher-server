@@ -8,7 +8,9 @@ class Server {
     this.port = process.env.PORT;
 
     this.paths = {
+      auth: "/api/auth",
       option: "/api/option",
+      user: "/api/user",
       vote: "/api/vote",
       voter: "/api/voter",
       voting: "/api/voting",
@@ -30,7 +32,9 @@ class Server {
   }
 
   routes() {
+    this.app.use(this.paths.auth, require("../routes/auth"));
     this.app.use(this.paths.option, require("../routes/option"));
+    this.app.use(this.paths.user, require("../routes/user"));
     this.app.use(this.paths.vote, require("../routes/vote"));
     this.app.use(this.paths.voter, require("../routes/voter"));
     this.app.use(this.paths.voting, require("../routes/voting"));
