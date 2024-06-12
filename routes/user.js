@@ -41,14 +41,12 @@ router.post(
 );
 
 //GET
-router.get("/", [hasValidJwt, hasAdmin], usersGet);
+router.get("/", usersGet);
 
 //GET
 router.get(
   "/:id",
   [
-    hasValidJwt,
-    hasRole("ADMIN_ROLE", "USER_ROLE"),
     check("id", "no valid mongo id").isMongoId(),
     check("id").custom(userIdExists),
     entriesValidator,
