@@ -21,7 +21,6 @@ router.post(
     check("description", "description is required").notEmpty(),
     check("startDate", "startDate is required").notEmpty(),
     check("endDate", "endDate is required").notEmpty(),
-    check("contractAddress", "contractAddress is required").isEthereumAddress(),
     check("organizer", "organizer is required").isMongoId(),
     check("organizer").custom(userIdExists),
     entriesValidator,

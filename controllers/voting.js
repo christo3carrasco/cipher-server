@@ -1,11 +1,16 @@
 const { request, response } = require("express");
 const { Voting } = require("../models");
+const deployContract = require("../helpers/deploy-contract");
 
 //POST
 const votingPost = async (req = request, res = response) => {
   try {
     const { ...body } = req.body;
     const voting = new Voting({ ...body });
+
+    const contractAddress = await deployContract();
+    voting.contractAddress = contractAddress;
+
     await voting.save();
 
     res.status(201).json({
