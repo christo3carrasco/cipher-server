@@ -8,7 +8,7 @@ const web3 = new Web3(process.env.NETWORK);
 
 //POST
 const votePost = async (req = request, res = response) => {
-  const { votingId, voterId, option } = req.params;
+  const { voterId, option } = req.params;
 
   try {
     const existingVote = await Vote.findOne({ voter: voterId });
@@ -19,12 +19,13 @@ const votePost = async (req = request, res = response) => {
       });
     }
 
-    const voting = await Voting.findById(votingId);
-    const address = voting.contractAddress;
-
     const voter = await Voter.findById(voterId);
     voter.hasVoted = true;
     voter.save();
+
+    const votingId = voter.votingProcess;
+    const voting = await Voting.findById(votingId);
+    const address = voting.contractAddress;
 
     const contract = new web3.eth.Contract(choiceContract.abi, address);
     const addresses = await web3.eth.getAccounts();
@@ -33,7 +34,11 @@ const votePost = async (req = request, res = response) => {
       .vote(option)
       .send({ from: addresses[0], gas: "3000000" });
 
-    const vote = new Vote({ voter: voterId, optionNumber: option });
+    const vote = new Vote({
+      voter: voterId,
+      optionNumber: option,
+      votingProcess: votingId,
+    });
     await vote.save();
 
     res.status(201).json({
@@ -53,12 +58,20 @@ const votePost = async (req = request, res = response) => {
 //GET
 const votesGet = async (req = request, res = response) => {
   try {
-    const { voter } = req.query;
+    const { voter, optionNumber, votingProcess } = req.query;
 
     const filters = {};
 
     if (voter) {
       filters.voter = voter;
+    }
+
+    if (optionNumber) {
+      filters.optionNumber = optionNumber;
+    }
+
+    if (votingProcess) {
+      filters.votingProcess = votingProcess;
     }
 
     const votes = await Vote.find(filters);

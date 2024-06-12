@@ -12,6 +12,11 @@ const VoteSchema = Schema(
       type: Number,
       required: true,
     },
+    votingProcess: {
+      type: Schema.Types.ObjectId,
+      ref: "Voting",
+      required: true,
+    },
     timestamp: {
       type: Date,
       default: Date.now,

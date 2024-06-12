@@ -3,20 +3,14 @@ const { check } = require("express-validator");
 
 const { votePost, votesGet, voteGet } = require("../controllers/vote");
 const { entriesValidator } = require("../middlewares");
-const {
-  voteIdExists,
-  voterIdExists,
-  votingIdExists,
-} = require("../helpers/db-validator");
+const { voteIdExists, voterIdExists } = require("../helpers/db-validator");
 
 const router = Router();
 
 //POST
 router.post(
-  "/:votingId/:voterId/:option",
+  "/:voterId/:option",
   [
-    check("votingId", "no valid mongo id").isMongoId(),
-    check("votingId").custom(votingIdExists),
     check("voterId", "no valid mongo id").isMongoId(),
     check("voterId").custom(voterIdExists),
     check("option").isNumeric(),
