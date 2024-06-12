@@ -30,7 +30,7 @@ const votingPost = async (req = request, res = response) => {
 //GET
 const votingsGet = async (req = request, res = response) => {
   try {
-    const { status, organizer } = req.query;
+    const { status, organizer, isApproved, isStarted, isFinished } = req.query;
 
     const filters = {};
 
@@ -40,6 +40,18 @@ const votingsGet = async (req = request, res = response) => {
 
     if (organizer) {
       filters.organizer = organizer;
+    }
+
+    if (isApproved) {
+      filters.isApproved = isApproved;
+    }
+
+    if (isStarted) {
+      filters.isStarted = isStarted;
+    }
+
+    if (isFinished) {
+      filters.isFinished = isFinished;
     }
 
     const votings = await Voting.find(filters);

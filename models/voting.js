@@ -18,7 +18,15 @@ const VotingSchema = Schema(
       type: Date,
       required: true,
     },
-    isActive: {
+    isApproved: {
+      type: Boolean,
+      default: false,
+    },
+    isStarted: {
+      type: Boolean,
+      default: false,
+    },
+    isFinished: {
       type: Boolean,
       default: false,
     },
