@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cipher-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cipher-server
+  template:
+    metadata:
+      labels:
+        app: cipher-server
+    spec:
+      containers:
+        - name: cipher-server
+          image: cipher-server:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
