@@ -21,7 +21,7 @@ const votePost = async (req = request, res = response) => {
 
     const voter = await Voter.findById(voterId);
     voter.hasVoted = true;
-    voter.save();
+    await voter.save();
 
     const votingId = voter.votingProcess;
     const voting = await Voting.findById(votingId);
@@ -30,7 +30,7 @@ const votePost = async (req = request, res = response) => {
     const contract = new web3.eth.Contract(choiceContract.abi, address);
     const addresses = await web3.eth.getAccounts();
 
-    await contract.methods
+    const transaction = await contract.methods
       .vote(option)
       .send({ from: addresses[0], gas: "3000000" });
 
@@ -38,6 +38,7 @@ const votePost = async (req = request, res = response) => {
       voter: voterId,
       optionNumber: option,
       votingProcess: votingId,
+      transactionHash: transaction.transactionHash,
     });
     await vote.save();
 
@@ -58,7 +59,7 @@ const votePost = async (req = request, res = response) => {
 //GET
 const votesGet = async (req = request, res = response) => {
   try {
-    const { voter, optionNumber, votingProcess } = req.query;
+    const { voter, optionNumber, votingProcess, transactionHash } = req.query;
 
     const filters = {};
 
@@ -72,6 +73,10 @@ const votesGet = async (req = request, res = response) => {
 
     if (votingProcess) {
       filters.votingProcess = votingProcess;
+    }
+
+    if (transactionHash) {
+      filters.transactionHash = transactionHash;
     }
 
     const votes = await Vote.find(filters);

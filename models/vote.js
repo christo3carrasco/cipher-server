@@ -21,6 +21,10 @@ const VoteSchema = Schema(
       type: Date,
       default: Date.now,
     },
+    transactionHash: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
